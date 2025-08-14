@@ -1,208 +1,238 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Estación Quinzona</title>
-  <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/phosphor.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <style>
-    :root {
-      --azul-marino: #0a1a2f;
-      --celeste-claro: #e0f7fa;
-      --amarillo: #fdd835;
-      --blanco: #ffffff;
-      --texto-oscuro: #1a1a1a;
-      --fondo-carta-claro: #ffffff;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Estación Quinzona PRO</title>
+<link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/phosphor.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 
-    body {
-      margin: 0;
-      padding: 1.5rem;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--azul-marino);
-      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      color: var(--amarillo);
-      transition: background-color 0.5s ease, color 0.5s ease;
-    }
+<style>
+:root {
+  --primary-dark: #0a1a2f;
+  --primary-light: #f0f8ff;
+  --color blanco :white;
+  --accent: #fdd835;
+  --text-light: #ffffff;
+  --text-dark: #0d1b2a;
+  --rose-gradient: linear-gradient(135deg, #42a5f5, #1e88e5);
+  --rose-gradient-light: linear-gradient(135deg, #80deea, #26c6da);
+}
 
-    .modo-claro {
-      background-color: var(--celeste-claro);
-      background-image: none;
-      color: var(--texto-oscuro);
-    }
+/* Body y fondo */
+body {
+  margin:0; padding:1.5rem;
+  font-family:'Segoe UI', sans-serif;
+  background-color: var(--primary-dark);
+  color: var(--accent);
+  transition: 0.5s ease;
+}
+body.modo-claro {
+  background-color: var(--primary-light);
+  color: var(--text-dark);
+}
 
-    .modo-claro .card {
-      background-color: var(--fondo-carta-claro);
-      color: var(--texto-oscuro);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+/* Contenedor general */
+.container { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
 
-    .modo-claro .label {
-      color: #00796b;
-    }
+/* Header */
+.header { text-align:center; width:100%; margin-bottom:1rem; }
+.header h1{ font-size:3rem; margin-bottom:0.2rem; }
+.header h2{ font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; }
 
-    .container {
-      max-width: 950px;
-      margin: 0 auto;
-    }
+/* Botón modo */
+.toggle-btn {
+  background:transparent; border:2px solid var(--accent);
+  color: var(--accent); padding:0.5rem 1rem;
+  font-weight:bold; border-radius:12px; cursor:pointer; transition:0.3s;
+}
+.toggle-btn:hover { background:var(--accent); color: var(--primary-dark); }
+body.modo-claro .toggle-btn { border-color:#00796b; color:#00796b; }
+body.modo-claro .toggle-btn:hover { background:#00796b; color:#ffffff; }
 
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+/* Rosa de vientos */
+.rose-container { display:flex; flex-direction:column; align-items:center; margin-bottom:1rem; }
+.rose-box {
+  background: var(--rose-gradient); border-radius:20px; padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3); display:flex; flex-direction:column; align-items:center;
+  transition: all 0.3s ease;
+}
+body.modo-claro .rose-box { background: var(--rose-gradient-light); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
 
-    .header h1 {
-      font-size: 3.2rem;
-    }
+.rose-legend {
+  margin-top:12px; text-align:center;
+  font-weight:1000; font-size:1.15rem;
+  color:white;
+}
+body.modo-claro .rose-legend { color:#004d40; }
 
-    .toggle-btn {
-      background: transparent;
-      border: 2px solid var(--amarillo);
-      color: var(--amarillo);
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
+/* Números de grados */
+#degreeNumbers text{ font-family:'Segoe UI', sans-serif; }
 
-    .modo-claro .toggle-btn {
-      border-color: #00796b;
-      color: #00796b;
-    }
+/* Tarjetas de datos modernas */
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; flex:1; }
+.card {
+  background: linear-gradient(145deg,#132743,#0a1a2f);
+  padding:1.2rem 1rem; border-radius:20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  text-align:center; transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.45);
+}
+.label { font-weight:700; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:0.95rem; }
+.value { font-size:1.5rem; color: var(--text-light); }
+body.modo-claro .card { background: linear-gradient(145deg,#e0f7fa,#b2ebf2); }
+body.modo-claro .value { color: #004d40; }
+body.modo-claro .label { color: #004d40; }
 
-    .toggle-btn:hover {
-      background: var(--amarillo);
-      color: var(--azul-marino);
-    }
+/* Última actualización */
+#ultimaActualizacion { width:100%; text-align:center; font-size:0.95rem; margin-top:1rem; color:#ffeb3b; font-weight:600; }
+body.modo-claro #ultimaActualizacion { color:#004d40; font-weight:700; }
 
-    .modo-claro .toggle-btn:hover {
-      background: #00796b;
-      color: white;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background-color: #132743;
-      padding: 1.2rem 1rem;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0, 100, 255, 0.1);
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-    }
-
-    .label {
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-
-    .value {
-      font-size: 1.5rem;
-      color: var(--blanco);
-    }
-
-    .modo-claro .value {
-      color: var(--texto-oscuro);
-    }
-
-    #map {
-      height: 400px;
-      width: 100%;
-      margin-top: 2rem;
-      border-radius: 16px;
-      border: 2px solid var(--amarillo);
-    }
-  </style>
+/* Mapa */
+#map { height:400px; width:100%; margin-top:1.5rem; border-radius:16px; border:2px solid var(--accent); }
+body.modo-claro #map { border-color:#004d40; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Estación Meteorológica Quinzona</h1>
-      <h2>(Isla Tenglo)</h2>
-      <button class="toggle-btn" onclick="toggleModo()">🌞/🌙 Modo Claro / Oscuro</button>
-    </div>
-
-    <div class="grid">
-      <div class="card"><div class="label">📅<i class="ph-calendar"></i>Fecha</div><div id="Día/mes/año" class="value">--</div></div>
-      <div class="card"><div class="label">⏰<i class="ph-clock"></i>Hora</div><div id="Hora" class="value">--</div></div>
-      <div class="card"><div class="label">🌡<i class="ph-thermometer"></i>Temperatura</div><div id="temperatura" class="value">-- °C</div></div>
-      <div class="card"><div class="label">💧<i class="ph-drop"></i>Humedad</div><div id="humedad" class="value">-- %</div></div>
-      <div class="card"><div class="label">🌫<i class="ph-cloud-rain"></i>Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
-      <div class="card"><div class="label">🧭<i class="ph-gauge"></i>Presión</div><div id="presion" class="value">-- hPa</div></div>
-      <div class="card"><div class="label">🌬<i class="ph-wind"></i>Viento</div><div id="viento" class="value">--</div></div>
-      <div class="card"><div class="label">💨<i class="ph-arrow-bend-up-right"></i>Rachas</div><div id="Rachas" class="value">-- nds</div></div>
-      <div class="card"><div class="label">🌧️<i class="ph-Precipitacion"></i>Precipitación</div><div id="Precipitación" class="value">-- mm</div></div>
-    </div>
-
-    <div id="map"></div>
+<div class="container">
+  <div class="header">
+    <h1>Estación Meteorológica Quinzona</h1>
+    <h2>(Isla Tenglo)</h2>
+    <button class="toggle-btn" onclick="toggleModo()">🌞/🌙 Modo Claro / Oscuro</button>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <script>
-    function convertirGradosAPuntoCardinal(grados) {
-      const direcciones = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-        'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-      const indice = Math.round(grados / 22.5) % 16;
-      return direcciones[indice];
-    }
+  <!-- Rosa de vientos -->
+  <div class="rose-container">
+    <div class="rose-box">
+      <svg id="windRose" viewBox="0 0 240 240" width="240" height="240" aria-label="Rosa de vientos">
+        <circle cx="120" cy="120" r="110" fill="#1e88e5"/>
+        <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff50" stroke-dasharray="3 6"/>
+        <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff50" stroke-dasharray="3 6"/>
+        <g stroke="#ffffff80" stroke-width="2">
+          <line x1="120" y1="10" x2="120" y2="24"/>
+          <line x1="230" y1="120" x2="216" y2="120"/>
+          <line x1="120" y1="230" x2="120" y2="216"/>
+          <line x1="10" y1="120" x2="24" y2="120"/>
+        </g>
+        <g font-size="14" text-anchor="middle" fill="#fff" font-weight="700">
+          <text x="120" y="26">N</text>
+          <text x="214" y="124">E</text>
+          <text x="120" y="220">S</text>
+          <text x="26" y="124">W</text>
+        </g>
+        <g id="degreeNumbers"></g>
+        <g id="arrow" transform="rotate(0 120 120)">
+          <line x1="120" y1="120" x2="120" y2="40" stroke="#fdd835" stroke-width="6" stroke-linecap="round"/>
+          <polygon points="120,28 112,48 128,48" fill="#fdd835"/>
+          <line id="tail" x1="120" y1="120" x2="120" y2="120" stroke="#fdd835" stroke-width="6" stroke-linecap="round" opacity=".6"/>
+        </g>
+        <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#ffeb3b" stroke-width="6" stroke-linecap="round" stroke-opacity=".65"/>
+      </svg>
+      <div class="rose-legend">
+        <div>Dirección: <span id="dirText">--°</span></div>
+        <div>Velocidad: <span id="spdText">-- nds</span></div>
+        <div>Rachas: <span id="gstText">-- nds</span></div>
+      </div>
+    </div>
+  </div>
 
-    async function cargarDatos() {
-      try {
-        const response = await fetch('https://corsproxy.io/?https://web.directemar.cl/met/jturno/estaciones/quinzona/realtime.txt');
-        const texto = await response.text();
-        const lineas = texto.trim().split('\n');
-        const ultimaLinea = lineas[lineas.length - 1];
-        const datos = ultimaLinea.trim().split(/\s+/);
+  <!-- Tarjetas de datos -->
+  <div class="grid">
+    <div class="card"><div class="label">🌡<i class="ph-thermometer"></i>Temperatura</div><div id="temperatura" class="value">-- °C</div></div>
+    <div class="card"><div class="label">💧<i class="ph-drop"></i>Humedad</div><div id="humedad" class="value">-- %</div></div>
+    <div class="card"><div class="label">🌫<i class="ph-cloud-rain"></i>Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
+    <div class="card"><div class="label">🧭<i class="ph-gauge"></i>Presión</div><div id="presion" class="value">-- hPa</div></div>
+    <div class="card"><div class="label">🌬<i class="ph-wind"></i>Viento</div><div id="viento" class="value">--</div></div>
+    <div class="card"><div class="label">💨<i class="ph-arrow-bend-up-right"></i>Rachas</div><div id="Rachas" class="value">-- nds</div></div>
+    <div class="card"><div class="label">🌧️<i class="ph-Precipitacion"></i>Precipitación</div><div id="Precipitación" class="value">-- mm</div></div>
+  </div>
 
-        const direccionGrados = parseFloat(datos[7]);
-        const intensidadNudos = datos[5];
-        const direccionCardinal = convertirGradosAPuntoCardinal(direccionGrados);
+  <!-- Última actualización -->
+  <div id="ultimaActualizacion">Última actualización: --</div>
 
-        document.getElementById('Día/mes/año').textContent = datos[0];
-        document.getElementById('Hora').textContent = datos[1];
-        document.getElementById('temperatura').textContent = `${datos[2]} °C`;
-        document.getElementById('humedad').textContent = `${datos[3]} %`;
-        document.getElementById('rocio').textContent = `${datos[4]} °C`;
-        document.getElementById('presion').textContent = `${datos[10]} hPa`;
-        document.getElementById('viento').textContent = `${direccionGrados}° (${direccionCardinal}) ${intensidadNudos} nds`;
-        document.getElementById('Rachas').textContent = `${datos[40]} nds`;
-        document.getElementById('Precipitación').textContent = `${datos[9]} nds`;
-      } catch (error) {
-        console.error('Error al cargar los datos:', error);
-        document.body.innerHTML = '<p style="text-align:center;color:red;">⚠️ Error al cargar los datos.</p>';
-      }
-    }
+  <!-- Mapa -->
+  <div id="map"></div>
+</div>
 
-    cargarDatos();
-    setInterval(cargarDatos, 5 * 60 * 1000);
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+function convertirGradosAPuntoCardinal(grados){
+  const direcciones = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  const indice = Math.round(grados/22.5)%16;
+  return direcciones[indice];
+}
 
-    const map = L.map('map').setView([-41.4866, -72.9512], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    L.marker([-41.4866, -72.9512]).addTo(map)
-      .bindPopup('📍 Estación Quinzona')
-      .openPopup();
+function dibujarNumerosRosa(){
+  const g = document.getElementById('degreeNumbers'); g.innerHTML='';
+  const centerX=120, centerY=120, radius=100;
+  for(let deg=0; deg<360; deg+=30){
+    const rad=(deg-90)*Math.PI/180;
+    const x=centerX+radius*Math.cos(rad);
+    const y=centerY+radius*Math.sin(rad);
+    const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute('x',x); text.setAttribute('y',y+4);
+    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffeb3b');
+    text.setAttribute('font-size','12'); text.setAttribute('font-weight','700'); text.textContent=deg+'°';
+    g.appendChild(text);
+  }
+}
+dibujarNumerosRosa();
 
-    function toggleModo() {
-      document.body.classList.toggle('modo-claro');
-    }
-  </script>
+function actualizarRosaAnimada(dirGrados, spdNudos, gustNudos){
+  const arrow=document.getElementById('arrow');
+  const tail=document.getElementById('tail');
+  const ring=document.getElementById('intensityRing');
+  arrow.style.transition='transform 1.5s ease';
+  arrow.setAttribute('transform',`rotate(${dirGrados} 120 120)`);
+  const k=Math.max(0,Math.min(spdNudos/60,1));
+  const tailLen=10+(70-10)*k;
+  tail.setAttribute('x1','120'); tail.setAttribute('y1','120');
+  tail.setAttribute('x2','120'); tail.setAttribute('y2',String(120+tailLen));
+  const r=30+(95-30)*k; ring.setAttribute('r',r.toFixed(1));
+  document.getElementById('dirText').textContent=`${dirGrados.toFixed(0)}° (${convertirGradosAPuntoCardinal(dirGrados)})`;
+  document.getElementById('spdText').textContent=`${spdNudos} nds`;
+  document.getElementById('gstText').textContent=`${gustNudos} nds`;
+}
+
+async function cargarDatos(){
+  try{
+    const response = await fetch('https://corsproxy.io/?https://web.directemar.cl/met/jturno/estaciones/quinzona/realtime.txt');
+    const texto = await response.text();
+    const lineas = texto.trim().split('\n');
+    const ultimaLinea = lineas[lineas.length-1];
+    const datos = ultimaLinea.trim().split(/\s+/);
+    const direccionGrados=parseFloat(datos[7]);
+    const velocidadNudos=parseFloat(datos[5]);
+    const rachasNudos=parseFloat(datos[40]);
+
+    document.getElementById('temperatura').textContent=`${datos[2]} °C`;
+    document.getElementById('humedad').textContent=`${datos[3]} %`;
+    document.getElementById('rocio').textContent=`${datos[4]} °C`;
+    document.getElementById('presion').textContent=`${datos[10]} hPa`;
+    document.getElementById('viento').textContent=`${direccionGrados}° (${convertirGradosAPuntoCardinal(direccionGrados)}) ${velocidadNudos} nds`;
+    document.getElementById('Rachas').textContent=`${rachasNudos} nds`;
+    document.getElementById('Precipitación').textContent=`${datos[9]} mm`;
+    actualizarRosaAnimada(direccionGrados, velocidadNudos, rachasNudos);
+
+    const ahora=new Date();
+    document.getElementById('ultimaActualizacion').textContent=
+      `Última actualización: ${ahora.toLocaleDateString()} ${ahora.toLocaleTimeString()}`;
+  } catch(e){ console.error(e); }
+}
+cargarDatos(); setInterval(cargarDatos,5*60*1000);
+
+const map=L.map('map').setView([-41.4866,-72.9512],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+L.marker([-41.4866,-72.9512]).addTo(map).bindPopup('📍 Estación Quinzona').openPopup();
+
+function toggleModo(){ document.body.classList.toggle('modo-claro'); }
+
+// Fondo dinámico según hora
+const hora=new Date().getHours();
+if(hora>=6 && hora<18){ document.body.classList.add('modo-claro'); } 
+</script>
 </body>
 </html>
