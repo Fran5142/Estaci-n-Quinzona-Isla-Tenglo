@@ -8,34 +8,27 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <style>
 :root {
+  --primary-light: #d6ecff;
   --accent: #ffd54f;
-  --card-bg: rgba(224, 247, 250, 0.9);
-  --text-dark: #004d40;
-  --yellow: #ffd54f;
-  --overlay: rgba(0,0,0,0.4);
 }
 
 body {
   margin: 0;
   padding: 1.5rem;
   font-family: 'Segoe UI', sans-serif;
-  background: url('https://img1.wallspic.com/previews/7/4/9/3947/3947-cielo_de_la_noche-azul-el_espacio_exterior-estrella-x750.jpg') no-repeat center center fixed;
+  background-color: var(--primary-light);
+  background-image: url('https://img1.wallspic.com/previews/7/4/9/3947/3947-cielo_de_la_noche-azul-el_espacio_exterior-estrella-galaxia-x750.jpg');
   background-size: cover;
-  color: var(--text-dark);
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top:0; left:0; width:100%; height:100%;
-  background: var(--overlay);
-  z-index: -1;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #004d40;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .container { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
 .header { text-align:center; width:100%; margin-bottom:1rem; }
-.header h1{ font-size:3rem; margin-bottom:0.2rem; color: var(--yellow);}
-.header h2{ font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; color: var(--yellow);}
+.header h1{ font-size:3rem; margin-bottom:0.2rem; color: yellow; }
+.header h2{ font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; color: yellow; }
 
 .rose-container {
   display:flex; flex-direction:column; align-items:center;
@@ -43,15 +36,15 @@ body::before {
 }
 .rose-legend {
   margin-top:12px; text-align:center;
-  font-weight:700; font-size:1.15rem;
-  color: var(--yellow);
+  font-weight:1000; font-size:1.15rem;
+  color: yellow; /* Cambio a amarillo */
 }
 
-#degreeNumbers text{ font-family:'Segoe UI', sans-serif; fill: var(--yellow); font-weight:700;}
+#degreeNumbers text{ font-family:'Segoe UI', sans-serif; }
 
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; flex:1; }
 .card {
-  background: var(--card-bg);
+  background: linear-gradient(145deg,#e0f7fa,#b2ebf2);
   padding:1.2rem 1rem; border-radius:20px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.3);
   text-align:center; transition: all 0.3s ease;
@@ -60,10 +53,10 @@ body::before {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.45);
 }
-.label { font-weight:700; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:0.95rem; color: var(--text-dark);}
-.value { font-size:1.5rem; color: var(--text-dark); }
+.label { font-weight:700; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:0.95rem; color:#004d40; }
+.value { font-size:1.5rem; color: #004d40; }
 
-#ultimaActualizacion { width:100%; text-align:center; font-size:0.95rem; margin-top:1rem; color: var(--yellow); font-weight:700; }
+#ultimaActualizacion { width:100%; text-align:center; font-size:0.95rem; margin-top:1rem; color: yellow; font-weight:700; }
 
 #map { height:400px; width:100%; margin-top:1.5rem; border-radius:16px; border:2px solid var(--accent); }
 </style>
@@ -75,38 +68,54 @@ body::before {
     <h2>(Isla Tenglo)</h2>
   </div>
 
-  <!-- Rosa de vientos -->
-  <div class="rose-container">
-    <svg id="windRose" viewBox="0 0 240 240" width="240" height="240" aria-label="Rosa de vientos">
-      <circle cx="120" cy="120" r="110" fill="transparent"/>
-      <circle cx="120" cy="120" r="90" fill="none" stroke="rgba(255,255,255,0.3)" stroke-dasharray="3 6"/>
-      <circle cx="120" cy="120" r="70" fill="none" stroke="rgba(255,255,255,0.3)" stroke-dasharray="3 6"/>
-      <g stroke="rgba(255,255,255,0.5)" stroke-width="2">
-        <line x1="120" y1="10" x2="120" y2="24"/>
-        <line x1="230" y1="120" x2="216" y2="120"/>
-        <line x1="120" y1="230" x2="120" y2="216"/>
-        <line x1="10" y1="120" x2="24" y2="120"/>
-      </g>
-      <g font-size="14" text-anchor="middle" fill="var(--yellow)" font-weight="700">
-        <text x="120" y="26">N</text>
-        <text x="214" y="124">E</text>
-        <text x="120" y="220">S</text>
-        <text x="26" y="124">W</text>
-      </g>
-      <g id="degreeNumbers"></g>
-      <g id="arrow" transform="rotate(0 120 120)">
-        <line x1="120" y1="120" x2="120" y2="40" stroke="#fdd835" stroke-width="6" stroke-linecap="round"/>
-        <polygon points="120,28 112,48 128,48" fill="#fdd835"/>
-        <line id="tail" x1="120" y1="120" x2="120" y2="120" stroke="#fdd835" stroke-width="6" stroke-linecap="round" opacity=".6"/>
-      </g>
-      <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#ffeb3b" stroke-width="6" stroke-linecap="round" stroke-opacity=".65"/>
-    </svg>
-    <div class="rose-legend">
-      <div>Dirección: <span id="dirText">--°</span></div>
-      <div>Velocidad: <span id="spdText">-- nds</span></div>
-      <div>Rachas: <span id="gstText">-- nds</span></div>
-    </div>
-  </div>
+<!-- Rosa de vientos moderna solo con intensidad central -->
+<div class="rose-container">
+  <svg id="windRose" viewBox="0 0 240 240" width="240" height="240" aria-label="Rosa de vientos">
+    <defs>
+      <radialGradient id="arrowGradient" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFD700" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#FFA500" stop-opacity="0.6"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Fondo de la rosa -->
+    <circle cx="120" cy="120" r="110" fill="#1e88e5"/>
+    <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
+    <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
+
+    <!-- Líneas cardinales -->
+    <g stroke="#ffffff50" stroke-width="1.5">
+      <line x1="120" y1="10" x2="120" y2="24"/>
+      <line x1="230" y1="120" x2="216" y2="120"/>
+      <line x1="120" y1="230" x2="120" y2="216"/>
+      <line x1="10" y1="120" x2="24" y2="120"/>
+    </g>
+
+    <!-- Letras cardinales -->
+    <g font-size="14" text-anchor="middle" fill="#FFD700" font-weight="700">
+      <text x="120" y="26">N</text>
+      <text x="214" y="124">E</text>
+      <text x="120" y="220">S</text>
+      <text x="26" y="124">W</text>
+    </g>
+
+    <!-- Números de grados -->
+    <g id="degreeNumbers"></g>
+
+    <!-- Flecha del viento -->
+    <g id="arrow" transform="rotate(0 120 120)">
+      <line x1="120" y1="120" x2="120" y2="40" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round"/>
+      <polygon points="120,28 112,48 128,48" fill="url(#arrowGradient)"/>
+      <line id="tail" x1="120" y1="120" x2="120" y2="120" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round" opacity=".6"/>
+    </g>
+
+    <!-- Anillo de intensidad -->
+    <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-opacity=".65"/>
+
+    <!-- Texto central solo con velocidad del viento, más pequeño y moderno -->
+    <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#FFD700" font-family="Segoe UI, sans-serif">-- nds</text>
+  </svg>
+</div>
 
   <!-- Tarjetas -->
   <div class="grid">
@@ -141,22 +150,23 @@ function dibujarNumerosRosa(){
     const y=centerY+radius*Math.sin(rad);
     const text=document.createElementNS("http://www.w3.org/2000/svg","text");
     text.setAttribute('x',x); text.setAttribute('y',y+4);
-    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffd54f');
+    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffeb3b');
     text.setAttribute('font-size','12'); text.setAttribute('font-weight','700'); text.textContent=deg+'°';
     g.appendChild(text);
   }
 }
 dibujarNumerosRosa();
 
-function actualizarRosaAnimada(dir, spd, gust){
+function actualizarRosaAnimada(dir, spd){
   document.getElementById('arrow').setAttribute('transform',`rotate(${dir} 120 120)`);
-  const k=Math.max(0,Math.min(spd/60,1));
-  document.getElementById('tail').setAttribute('y2',String(120+10+(70-10)*k));
-  document.getElementById('intensityRing').setAttribute('r',(30+(95-30)*k).toFixed(1));
-  document.getElementById('dirText').textContent=`${dir.toFixed(0)}° (${convertirGradosAPuntoCardinal(dir)})`;
-  document.getElementById('spdText').textContent=`${spd} nds`;
-  document.getElementById('gstText').textContent=`${gust} nds`;
+  const k = Math.max(0, Math.min(spd/60, 1));
+  document.getElementById('tail').setAttribute('y2', String(120 + 10 + (70 - 10) * k));
+  document.getElementById('intensityRing').setAttribute('r', (30 + (95 - 30) * k).toFixed(1));
+
+  // Solo velocidad en el centro, más pequeña y legible
+  document.getElementById('windSpeedText').textContent = `${spd} nds`;
 }
+
 
 async function cargarDatos(){
   try{
@@ -177,6 +187,7 @@ async function cargarDatos(){
 
     actualizarRosaAnimada(dir, vel, racha);
     document.getElementById('ultimaActualizacion').textContent=`Última actualización: ${new Date().toLocaleString()}`;
+
   } catch(e){ console.error(e); }
 }
 
