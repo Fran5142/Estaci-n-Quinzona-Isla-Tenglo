@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Estación Quinzona PRO</title>
+<title>Estación Quinzona</title>
 <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/phosphor.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <style>
@@ -26,9 +26,23 @@ body {
 }
 
 .container { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
+
 .header { text-align:center; width:100%; margin-bottom:1rem; }
-.header h1{ font-size:3rem; margin-bottom:0.2rem; color: yellow; }
-.header h2{ font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; color: yellow; }
+.header h1 {
+  display: flex;
+  align-items: center;       /* Centra verticalmente logo y texto */
+  justify-content: center;   /* Centra el conjunto */
+  gap: 15px;                 /* Espacio entre logo y texto */
+  font-size: 3rem;
+  margin-bottom: 0.2rem;
+  color: yellow;
+}
+.header h1 .logo {
+  width: 80px;               /* Logo más grande */
+  height: auto;
+  border-radius: 12px;       /* Bordes suaves */
+}
+.header h2 { font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; color: yellow; }
 
 .rose-container {
   display:flex; flex-direction:column; align-items:center;
@@ -37,7 +51,7 @@ body {
 .rose-legend {
   margin-top:12px; text-align:center;
   font-weight:1000; font-size:1.15rem;
-  color: yellow; /* Cambio a amarillo */
+  color: yellow;
 }
 
 #degreeNumbers text{ font-family:'Segoe UI', sans-serif; }
@@ -64,7 +78,10 @@ body {
 <body>
 <div class="container">
   <div class="header">
-    <h1>Estación Meteorológica Quinzona</h1>
+    <h1>
+      <img src="https://archive.org/download/imagen_mejorada_3D/LOGO%20METEOPMO.png" alt="Logo" class="logo">
+      Estación Meteorológica Quinzona
+    </h1>
     <h2>(Isla Tenglo)</h2>
   </div>
 
@@ -78,12 +95,10 @@ body {
       </radialGradient>
     </defs>
 
-    <!-- Fondo de la rosa -->
     <circle cx="120" cy="120" r="110" fill="#1e88e5"/>
     <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
     <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
 
-    <!-- Líneas cardinales -->
     <g stroke="#ffffff50" stroke-width="1.5">
       <line x1="120" y1="10" x2="120" y2="24"/>
       <line x1="230" y1="120" x2="216" y2="120"/>
@@ -91,7 +106,6 @@ body {
       <line x1="10" y1="120" x2="24" y2="120"/>
     </g>
 
-    <!-- Letras cardinales -->
     <g font-size="14" text-anchor="middle" fill="#FFD700" font-weight="700">
       <text x="120" y="26">N</text>
       <text x="214" y="124">E</text>
@@ -99,25 +113,20 @@ body {
       <text x="26" y="124">W</text>
     </g>
 
-    <!-- Números de grados -->
     <g id="degreeNumbers"></g>
 
-    <!-- Flecha del viento -->
     <g id="arrow" transform="rotate(0 120 120)">
       <line x1="120" y1="120" x2="120" y2="40" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round"/>
       <polygon points="120,28 112,48 128,48" fill="url(#arrowGradient)"/>
       <line id="tail" x1="120" y1="120" x2="120" y2="120" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round" opacity=".6"/>
     </g>
 
-    <!-- Anillo de intensidad -->
     <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-opacity=".65"/>
 
-    <!-- Texto central solo con velocidad del viento, más pequeño y moderno -->
     <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#FFD700" font-family="Segoe UI, sans-serif">-- nds</text>
   </svg>
 </div>
 
-  <!-- Tarjetas -->
   <div class="grid">
     <div class="card"><div class="label">🌬Viento</div><div id="viento" class="value">--</div></div>
     <div class="card"><div class="label">💨Rachas</div><div id="Rachas" class="value">-- nds</div></div>
@@ -162,11 +171,8 @@ function actualizarRosaAnimada(dir, spd){
   const k = Math.max(0, Math.min(spd/60, 1));
   document.getElementById('tail').setAttribute('y2', String(120 + 10 + (70 - 10) * k));
   document.getElementById('intensityRing').setAttribute('r', (30 + (95 - 30) * k).toFixed(1));
-
-  // Solo velocidad en el centro, más pequeña y legible
   document.getElementById('windSpeedText').textContent = `${spd} nds`;
 }
-
 
 async function cargarDatos(){
   try{
