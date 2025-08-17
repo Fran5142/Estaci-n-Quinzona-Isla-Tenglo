@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Estación Quinzona</title>
+<title>Estación Quinzona (Isla Tenglo)</title>
 <link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/phosphor.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <style>
@@ -22,41 +22,34 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #004d40;
-  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 .container { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
 .header { text-align:center; width:100%; margin-bottom:1rem; }
 .header h1{ font-size:3rem; margin-bottom:0.2rem; color: yellow; }
-.header h2{ font-size:1.5rem; font-weight:400; margin-bottom:0.5rem; color: yellow; }
+.header h2{ font-size:2.5rem; font-weight:700; margin-bottom:1.5rem; color: yellow; }
 
 .rose-container {
   display:flex; flex-direction:column; align-items:center;
   margin-bottom:1rem; padding:10px;
 }
-.rose-legend {
-  margin-top:12px; text-align:center;
-  font-weight:1000; font-size:1.15rem;
-  color: yellow; /* Cambio a amarillo */
-}
-
 #degreeNumbers text{ font-family:'Segoe UI', sans-serif; }
 
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; flex:1; }
 .card {
   background: linear-gradient(145deg,#e0f7fa,#b2ebf2);
-  padding:1.2rem 1rem; border-radius:20px;
+  padding:1.0rem 1rem; border-radius:20px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-  text-align:center; transition: all 0.3s ease;
+  text-align:center; transition: al 0.3s ease;
 }
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.45);
 }
-.label { font-weight:700; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:0.95rem; color:#004d40; }
-.value { font-size:1.5rem; color: #004d40; }
+.label { font-weight:900; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:1.2rem; color:#004d40; }
+.value { font-size:1.7rem; color: #004d40; }
 
-#ultimaActualizacion { width:100%; text-align:center; font-size:0.95rem; margin-top:1rem; color: yellow; font-weight:700; }
+#ultimaActualizacion { width:100%; text-align:center; font-size:1.0rem; margin-top:1rem; color: yellow; font-weight:700; }
 
 #map { height:400px; width:100%; margin-top:1.5rem; border-radius:16px; border:2px solid var(--accent); }
 </style>
@@ -64,11 +57,11 @@ body {
 <body>
 <div class="container">
   <div class="header">
-    <h1>Estación Meteorológica Quinzona</h1>
+    <h1>🌦Estación Meteorológica Quinzona🌦</h1>
     <h2>(Isla Tenglo)</h2>
   </div>
 
-<!-- Rosa de vientos moderna solo con intensidad central -->
+<!-- Rosa de vientos moderna -->
 <div class="rose-container">
   <svg id="windRose" viewBox="0 0 240 240" width="240" height="240" aria-label="Rosa de vientos">
     <defs>
@@ -78,10 +71,10 @@ body {
       </radialGradient>
     </defs>
 
-    <!-- Fondo de la rosa -->
-    <circle cx="120" cy="120" r="110" fill="#1e88e5"/>
-    <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
-    <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff30" stroke-width="1.5"/>
+    <!-- Fondo celeste semitransparente -->
+    <circle cx="120" cy="120" r="110" fill="rgba(135, 206, 250, 0.4)"/>
+    <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff40" stroke-width="1.2"/>
+    <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff40" stroke-width="1.2"/>
 
     <!-- Líneas cardinales -->
     <g stroke="#ffffff50" stroke-width="1.5">
@@ -92,7 +85,7 @@ body {
     </g>
 
     <!-- Letras cardinales -->
-    <g font-size="14" text-anchor="middle" fill="#FFD700" font-weight="700">
+    <g font-size="27" text-anchor="middle" fill="red" font-weight="700">
       <text x="120" y="26">N</text>
       <text x="214" y="124">E</text>
       <text x="120" y="220">S</text>
@@ -112,27 +105,26 @@ body {
     <!-- Anillo de intensidad -->
     <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-opacity=".65"/>
 
-    <!-- Texto central solo con velocidad del viento, más pequeño y moderno -->
+    <!-- Velocidad en el centro -->
     <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#FFD700" font-family="Segoe UI, sans-serif">-- nds</text>
   </svg>
 </div>
 
-  <!-- Tarjetas -->
-  <div class="grid">
-    <div class="card"><div class="label">🌬       Viento</div><div id="viento" class="value">--</div></div>
-    <div class="card"><div class="label">💨       Rachas</div><div id="Rachas" class="value">-- nds</div></div>
-    <div class="card"><div class="label">🌡       Temperatura</div><div id="temp_actual" class="value">-- °C</div></div>
-    <div class="card"><div class="label">💧       Humedad</div><div id="humedad" class="value">-- %</div></div>
-    <div class="card"><div class="label">🌫       Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
-    <div class="card"><div class="label">🧭       Presión</div><div id="presion" class="value">-- hPa</div></div>
-    <div class="card"><div class="label">🌡       Temperatura más alta</div><div id="temp_max" class="value">-- °C</div></div>
-    <div class="card"><div class="label">🌡       Temperatura más baja</div><div id="temp_min" class="value">-- °C</div></div>
-    <div class="card"><div class="label">🌧️       Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
-  </div>
-
-  <div id="ultimaActualizacion">Última actualización: --</div>
-  <div id="map"></div>
+<!-- Tarjetas -->
+<div class="grid">
+  <div class="card"><div class="label">🌬 Viento</div><div id="viento" class="value">--</div></div>
+  <div class="card"><div class="label">💨 Rachas</div><div id="Rachas" class="value">-- nds</div></div>
+  <div class="card"><div class="label">🌡 Temperatura</div><div id="temp_actual" class="value">-- °C</div></div>
+  <div class="card"><div class="label">💧 Humedad</div><div id="humedad" class="value">-- %</div></div>
+  <div class="card"><div class="label">🌫 Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
+  <div class="card"><div class="label">🧭 Presión</div><div id="presion" class="value">-- hPa</div></div>
+  <div class="card"><div class="label">🌡 Temp. máxima</div><div id="temp_max" class="value">-- °C</div></div>
+  <div class="card"><div class="label">🌡 Temp. mínima</div><div id="temp_min" class="value">-- °C</div></div>
+  <div class="card"><div class="label">🌧️ Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
 </div>
+
+<div id="ultimaActualizacion">Última actualización: --</div>
+<div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
@@ -150,8 +142,9 @@ function dibujarNumerosRosa(){
     const y=centerY+radius*Math.sin(rad);
     const text=document.createElementNS("http://www.w3.org/2000/svg","text");
     text.setAttribute('x',x); text.setAttribute('y',y+4);
-    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffeb3b');
-    text.setAttribute('font-size','12'); text.setAttribute('font-weight','700'); text.textContent=deg+'°';
+    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffeb3b'); // amarillo;
+    text.setAttribute('font-size','14'); text.setAttribute('font-weight','700'); 
+    text.textContent=deg+'°';
     g.appendChild(text);
   }
 }
@@ -162,11 +155,8 @@ function actualizarRosaAnimada(dir, spd){
   const k = Math.max(0, Math.min(spd/60, 1));
   document.getElementById('tail').setAttribute('y2', String(120 + 10 + (70 - 10) * k));
   document.getElementById('intensityRing').setAttribute('r', (30 + (95 - 30) * k).toFixed(1));
-
-  // Solo velocidad en el centro, más pequeña y legible
   document.getElementById('windSpeedText').textContent = `${spd} nds`;
 }
-
 
 async function cargarDatos(){
   try{
@@ -185,9 +175,8 @@ async function cargarDatos(){
     document.getElementById('presion').textContent=`${datos[10]} hPa`;
     document.getElementById('Precipitacion').textContent=`${datos[9]} mm`;
 
-    actualizarRosaAnimada(dir, vel, racha);
+    actualizarRosaAnimada(dir, vel);
     document.getElementById('ultimaActualizacion').textContent=`Última actualización: ${new Date().toLocaleString()}`;
-
   } catch(e){ console.error(e); }
 }
 
