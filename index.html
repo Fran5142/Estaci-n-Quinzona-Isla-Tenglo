@@ -1,170 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="EMA ISLA TENGLO" content="width=device-width, initial-scale=1.0">
-<title> E.M.A - Isla Tenglo</title>
-
-<!-- Fuentes e íconos -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Estación Quinzona (Isla Tenglo)</title>
+<link href="https://unpkg.com/phosphor-icons@1.4.2/src/css/phosphor.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-
 <style>
+:root {
+  --primary-light: #d6ecff;
+  --accent: #ffd54f;
+}
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(160deg, #001a33, #002b55, #001a33);
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-    text-align: center;
+  margin: 0;
+  padding: 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--primary-light);
+  background-image: url('https://img1.wallspic.com/previews/7/4/9/3947/3947-cielo_de_la_noche-azul-el_espacio_exterior-estrella-galaxia-x750.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #004d40;
 }
 
-/* ===== Menú superior con logos ===== */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    background: rgba(0,0,0,0.3);
-}
-header .logo { 
-    height: 130px; 
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-header .logo:hover {
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 12px #00f0ff);
-}
+.container { max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center; }
+.header { text-align:center; width:100%; margin-bottom:1rem; }
+.header h1{ font-size:3rem; margin-bottom:0.2rem; color: yellow; }
+.header h2{ font-size:2.5rem; font-weight:700; margin-bottom:1.5rem; color: yellow; }
 
-nav { display: flex; gap: 20px; align-items: center; }
-nav a {
-    color: #00f0ff;
-    text-decoration: none;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: 0.3s;
+.rose-container {
+  display:flex; flex-direction:column; align-items:center;
+  margin-bottom:1rem; padding:10px;
 }
-nav a:hover { background: rgba(0,255,255,0.2); }
+#degreeNumbers text{ font-family:'Segoe UI', sans-serif; }
 
-/* ===== Cabecera título ===== */
-h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #00f0ff, #00ffae, #00f0ff);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: gradient 5s ease infinite;
-}
-@keyframes gradient { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-
-/* ===== Hora ===== */
-.time-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 50px;
-    margin: 20px 0;
-    font-size: 1.3rem;
-    font-weight: 500;
-}
-.time-container i { color: #00f0ff; margin-right: 8px; }
-
-/* ===== Tarjetas de datos ===== */
-.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; flex:1; margin:40px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; flex:1; }
 .card {
-  background: linear-gradient(145deg,#001a33,#002b55);
-  padding:1rem;
-  border-radius:20px;
-  box-shadow: 0 5px 20px rgba(0,255,255,0.3);
-  text-align:center;
-  transition: all 0.3s ease;
+  background: linear-gradient(145deg,#e0f7fa,#b2ebf2);
+  padding:1.0rem 1rem; border-radius:20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  text-align:center; transition: all 0.3s ease;
 }
-.card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,255,255,0.45); }
-.label { font-weight:900; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:1.2rem; color:#00f0ff; }
-.value { font-size:1.7rem; color: #00f0ff; }
-#ultimaActualizacion { width:100%; text-align:center; font-size:1.0rem; margin-top:1rem; color: #00ffae; font-weight:700; }
-
-/* ===== Rosa de vientos ===== */
-.rose-container { display:flex; flex-direction:column; align-items:center; margin:20px 0; padding:10px; }
-
-/* ===== Mapa ===== */
-#map { height:400px; width:90%; margin:20px auto; border-radius:16px; border:2px solid #00ffae; }
-
-/* ===== Footer ===== */
-footer {
-    margin-top: 40px;
-    padding: 20px;
-    font-size: 0.9rem;
-    background: rgba(255,255,255,0.05);
-    border-top: 1px solid rgba(255,255,255,0.2);
-    text-align: center;
-    color: #00f0ff;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.45);
 }
+.label { font-weight:900; margin-bottom:0.5rem; display:flex; justify-content:center; align-items:center; gap:0.4rem; font-size:1.2rem; color:#004d40; }
+.value { font-size:1.7rem; color: #004d40; }
+
+#ultimaActualizacion { width:100%; text-align:center; font-size:1.0rem; margin-top:1rem; color: yellow; font-weight:700; }
+
+#map { height:400px; width:100%; margin-top:1.5rem; border-radius:16px; border:2px solid var(--accent); }
 </style>
 </head>
 <body>
+<div class="container">
+  <div class="header">
+    <h1>Estación Meteorológica Quinzona</h1>
+    <h2>(🌦 Isla Tenglo 🌦)</h2>
+  </div>
 
-<!-- Menú superior con logos -->
-<header>
-    <img src="https://archive.org/download/imagen_mejorada_3D/ppp.png" alt="Logo 1" class="logo">
-    <nav>
-        <a href="#">Inicio</a>
-        <a href="#">Estaciones</a>
-        <a href="#">Mapa</a>
-        <a href="#">Contacto</a>
-    </nav>
-    <img src="https://archive.org/download/imagen_mejorada_3D/LOGO%20METEOPMO.png" alt="Logo 2" class="logo">
-</header>
-
-<!-- Cabecera título -->
-<h1>Estación Meteorológica Automática Quinzona / Isla tenglo </h1>
-
-<!-- Hora -->
-<div class="time-container">
-    <div><i class="fa-solid fa-clock"></i> Hora Local: <span id="horaLocal"></span></div>
-    <div><i class="fa-solid fa-globe"></i> Hora UTC: <span id="horaUTC"></span></div>
-</div>
-
-<!-- Rosa de vientos -->
+<!-- Rosa de vientos moderna -->
 <div class="rose-container">
-<svg id="windRose" viewBox="0 0 240 240" width="240" height="240">
+  <svg id="windRose" viewBox="0 0 240 240" width="240" height="240" aria-label="Rosa de vientos">
     <defs>
       <radialGradient id="arrowGradient" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#00f0ff" stop-opacity="1"/>
-        <stop offset="100%" stop-color="#00ffae" stop-opacity="0.6"/>
+        <stop offset="0%" stop-color="#FFD700" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#FFA500" stop-opacity="0.6"/>
       </radialGradient>
     </defs>
-    <circle cx="120" cy="120" r="110" fill="rgba(0,255,255,0.1)"/>
-    <circle cx="120" cy="120" r="90" fill="none" stroke="#00f0ff40" stroke-width="1.2"/>
-    <circle cx="120" cy="120" r="70" fill="none" stroke="#00f0ff40" stroke-width="1.2"/>
+
+    <!-- Fondo celeste semitransparente -->
+    <circle cx="120" cy="120" r="110" fill="rgba(135, 206, 250, 0.4)"/>
+    <circle cx="120" cy="120" r="90" fill="none" stroke="#ffffff40" stroke-width="1.2"/>
+    <circle cx="120" cy="120" r="70" fill="none" stroke="#ffffff40" stroke-width="1.2"/>
+
+    <!-- Líneas cardinales -->
     <g stroke="#ffffff50" stroke-width="1.5">
       <line x1="120" y1="10" x2="120" y2="24"/>
       <line x1="230" y1="120" x2="216" y2="120"/>
       <line x1="120" y1="230" x2="120" y2="216"/>
       <line x1="10" y1="120" x2="24" y2="120"/>
     </g>
-    <g font-size="27" text-anchor="middle" fill="#00ffae" font-weight="700">
+
+    <!-- Letras cardinales -->
+    <g font-size="27" text-anchor="middle" fill="red" font-weight="700">
       <text x="120" y="26">N</text>
       <text x="214" y="124">E</text>
       <text x="120" y="220">S</text>
       <text x="26" y="124">W</text>
     </g>
+
+    <!-- Números de grados -->
     <g id="degreeNumbers"></g>
+
+    <!-- Flecha del viento -->
     <g id="arrow" transform="rotate(0 120 120)">
       <line x1="120" y1="120" x2="120" y2="40" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round"/>
       <polygon points="120,28 112,48 128,48" fill="url(#arrowGradient)"/>
       <line id="tail" x1="120" y1="120" x2="120" y2="120" stroke="url(#arrowGradient)" stroke-width="6" stroke-linecap="round" opacity=".6"/>
     </g>
-    <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#00f0ff" stroke-width="4" stroke-linecap="round" stroke-opacity=".65"/>
-    <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#00f0ff">-- nds</text>
-</svg>
+
+    <!-- Anillo de intensidad -->
+    <circle id="intensityRing" cx="120" cy="120" r="40" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-opacity=".65"/>
+
+    <!-- Velocidad en el centro -->
+    <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#FFD700" font-family="Segoe UI, sans-serif">-- nds</text>
+  </svg>
 </div>
 
-<!-- Tarjetas de datos -->
+<!-- Tarjetas -->
 <div class="grid">
   <div class="card"><div class="label">🌬 Viento</div><div id="viento" class="value">--</div></div>
   <div class="card"><div class="label">💨 Rachas</div><div id="Rachas" class="value">-- nds</div></div>
@@ -176,34 +122,19 @@ footer {
   <div class="card"><div class="label">🌡 Temp. mínima</div><div id="temp_min" class="value">-- °C</div></div>
   <div class="card"><div class="label">🌧️ Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
 </div>
+
 <div id="ultimaActualizacion">Última actualización: --</div>
-
-<!-- Mapa -->
 <div id="map"></div>
-
-<!-- Footer -->
-<footer>
-    &copy; 2025 Estación Meteorológica Chacao
-</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
-/* ===== Hora ===== */
-function actualizarHora() {
-    const ahora = new Date();
-    document.getElementById("horaLocal").textContent = ahora.toLocaleTimeString();
-    document.getElementById("horaUTC").textContent = ahora.toLocaleTimeString('en-GB', { hour12: false, timeZone: 'UTC' });
-}
-setInterval(actualizarHora, 1000);
-actualizarHora();
-
-/* ===== Rosa de vientos ===== */
 function convertirGradosAPuntoCardinal(grados){
   const direcciones = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
   return direcciones[Math.round(grados/22.5)%16];
 }
+
 function dibujarNumerosRosa(){
-  const g=document.getElementById('degreeNumbers'); g.innerHTML='';
+  const g = document.getElementById('degreeNumbers'); g.innerHTML='';
   const centerX=120, centerY=120, radius=100;
   for(let deg=0; deg<360; deg+=30){
     const rad=(deg-90)*Math.PI/180;
@@ -211,13 +142,14 @@ function dibujarNumerosRosa(){
     const y=centerY+radius*Math.sin(rad);
     const text=document.createElementNS("http://www.w3.org/2000/svg","text");
     text.setAttribute('x',x); text.setAttribute('y',y+4);
-    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#00ffae');
-    text.setAttribute('font-size','14'); text.setAttribute('font-weight','700');
+    text.setAttribute('text-anchor','middle'); text.setAttribute('fill','#ffeb3b'); 
+    text.setAttribute('font-size','14'); text.setAttribute('font-weight','700'); 
     text.textContent=deg+'°';
     g.appendChild(text);
   }
 }
 dibujarNumerosRosa();
+
 function actualizarRosaAnimada(dir, spd){
   document.getElementById('arrow').setAttribute('transform',`rotate(${dir} 120 120)`);
   const k = Math.max(0, Math.min(spd/60, 1));
@@ -226,7 +158,6 @@ function actualizarRosaAnimada(dir, spd){
   document.getElementById('windSpeedText').textContent = `${spd} nds`;
 }
 
-/* ===== Cargar datos meteorológicos ===== */
 async function cargarDatos(){
   try{
     const response = await fetch('https://corsproxy.io/?https://web.directemar.cl/met/jturno/estaciones/quinzona/realtime.txt');
@@ -244,12 +175,16 @@ async function cargarDatos(){
     document.getElementById('presion').textContent=`${datos[10]} hPa`;
     document.getElementById('Precipitacion').textContent=`${datos[9]} mm`;
 
-    const fecha=datos[0], hora=datos[1];
-    document.getElementById('ultimaActualizacion').textContent = `Última actualización: ${fecha} ${hora}`;
+     // Obtener fecha y hora reales desde el archivo
+    const fecha = datos[0]; // formato: AAAA-MM-DD
+    const hora = datos[1];  // formato: HH:MM:SS
+    document.getElementById('ultimaActualizacion').textContent = 
+      `Última actualización: ${fecha} ${hora}`;
 
     actualizarRosaAnimada(dir, vel);
   } catch(e){ console.error(e); }
 }
+
 cargarDatos();
 setInterval(cargarDatos,5*60*1000);
 
