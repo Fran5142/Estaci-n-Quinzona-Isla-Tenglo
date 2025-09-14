@@ -66,12 +66,15 @@ nav {
 
 /* Mapa */
 #map {
-    flex: 1 1 300px;
+    flex: 1 1 350px;
     min-width: 300px;
     max-width: 400px;
     height: 400px;
     border-radius: 16px;
     border: 2px solid #ffd54f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Datos meteorológicos */
@@ -84,11 +87,17 @@ nav {
 
 /* Rosa de vientos */
 .rose-container {
-    flex: 1 1 240px;
+    flex: 1 1 400px;
+    min-width: 350px;
+    max-width: 450px;
+    height: 450px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+}
+.rose-container svg {
+    width: 100%;
+    height: 100%;
 }
 
 /* Tarjetas */
@@ -154,9 +163,9 @@ footer {
     <div class="header-quinzona"></div>
 
     <div class="main-grid">
-        <!-- Rosa de los vientos a la izquierda -->
+        <!-- Rosa de los vientos al lado izquierdo -->
         <div class="rose-container">
-            <svg id="windRose" viewBox="0 0 240 240" width="240" height="240">
+            <svg id="windRose" viewBox="0 0 240 240">
                 <defs>
                     <radialGradient id="arrowGradient" cx="50%" cy="50%" r="50%">
                         <stop offset="0%" stop-color="#FFD700" stop-opacity="1"/>
@@ -187,7 +196,7 @@ footer {
             </svg>
         </div>
 
-        <!-- Datos meteorológicos en el centro -->
+        <!-- Datos meteorológicos -->
         <div class="grid">
             <div class="card"><div class="label">🌬 Viento</div><div id="viento" class="value">--</div></div>
             <div class="card"><div class="label">💨 Rachas</div><div id="Rachas" class="value">-- nds</div></div>
@@ -200,7 +209,7 @@ footer {
             <div class="card"><div class="label">🌧️ Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
         </div>
 
-        <!-- Mapa a la derecha -->
+        <!-- Mapa al lado derecho -->
         <div id="map"></div>
     </div>
 
