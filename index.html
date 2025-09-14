@@ -151,24 +151,10 @@ footer {
 </nav>
 
 <div class="container-quinzona">
-    <div class="header-quinzona">
-    </div>
+    <div class="header-quinzona"></div>
 
     <div class="main-grid">
-        <div id="map"></div>
-
-        <div class="grid">
-            <div class="card"><div class="label">🌬 Viento</div><div id="viento" class="value">--</div></div>
-            <div class="card"><div class="label">💨 Rachas</div><div id="Rachas" class="value">-- nds</div></div>
-            <div class="card"><div class="label">🌡 Temperatura</div><div id="temp_actual" class="value">-- °C</div></div>
-            <div class="card"><div class="label">💧 Humedad</div><div id="humedad" class="value">-- %</div></div>
-            <div class="card"><div class="label">🌫 Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
-            <div class="card"><div class="label">🧭 Presión</div><div id="presion" class="value">-- hPa</div></div>
-            <div class="card"><div class="label">🌡 Temp. máxima</div><div id="temp_max" class="value">-- °C</div></div>
-            <div class="card"><div class="label">🌡 Temp. mínima</div><div id="temp_min" class="value">-- °C</div></div>
-            <div class="card"><div class="label">🌧️ Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
-        </div>
-
+        <!-- Rosa de los vientos a la izquierda -->
         <div class="rose-container">
             <svg id="windRose" viewBox="0 0 240 240" width="240" height="240">
                 <defs>
@@ -200,6 +186,22 @@ footer {
                 <text id="windSpeedText" x="120" y="128" text-anchor="middle" font-size="18" font-weight="600" fill="#FFD700">-- nds</text>
             </svg>
         </div>
+
+        <!-- Datos meteorológicos en el centro -->
+        <div class="grid">
+            <div class="card"><div class="label">🌬 Viento</div><div id="viento" class="value">--</div></div>
+            <div class="card"><div class="label">💨 Rachas</div><div id="Rachas" class="value">-- nds</div></div>
+            <div class="card"><div class="label">🌡 Temperatura</div><div id="temp_actual" class="value">-- °C</div></div>
+            <div class="card"><div class="label">💧 Humedad</div><div id="humedad" class="value">-- %</div></div>
+            <div class="card"><div class="label">🌫 Punto de rocío</div><div id="rocio" class="value">-- °C</div></div>
+            <div class="card"><div class="label">🧭 Presión</div><div id="presion" class="value">-- hPa</div></div>
+            <div class="card"><div class="label">🌡 Temp. máxima</div><div id="temp_max" class="value">-- °C</div></div>
+            <div class="card"><div class="label">🌡 Temp. mínima</div><div id="temp_min" class="value">-- °C</div></div>
+            <div class="card"><div class="label">🌧️ Precipitación</div><div id="Precipitacion" class="value">-- mm</div></div>
+        </div>
+
+        <!-- Mapa a la derecha -->
+        <div id="map"></div>
     </div>
 
     <div id="ultimaActualizacion">Última actualización: --</div>
@@ -271,3 +273,4 @@ L.map('map').setView([-41.4866,-72.9512],13)
 </script>
 </body>
 </html>
+
