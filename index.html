@@ -251,7 +251,7 @@ function actualizarRosaAnimada(dir, spd){
 }
 async function cargarDatos(){
   try{
-    const response = await fetch('https://web.directemar.cl/met/jturno/estaciones/quinzona/realtime.txt');
+    const response = await fetch('https://corsproxy.io/?https://web.directemar.cl/met/jturno/estaciones/quinzona/realtime.txt');
     const lineas = (await response.text()).trim().split('\n');
     const datos = lineas[lineas.length-1].trim().split(/\s+/);
     const dir=parseFloat(datos[7]), vel=parseFloat(datos[5]), racha=parseFloat(datos[40]);
